@@ -21,7 +21,7 @@
     "graph_relaxations": 0,
     "states_pruned": 0,
     "bytes_allocated": 0,
-    "elapsed_ms": 0.0000
+    "elapsed_ms": 1.0000
   },
   {
     "algorithm": "Binary Search (Iterative)",
@@ -297,7 +297,7 @@
     "graph_relaxations": 0,
     "states_pruned": 0,
     "bytes_allocated": 800000,
-    "elapsed_ms": 1.0000
+    "elapsed_ms": 0.0000
   },
   {
     "algorithm": "+",
@@ -309,7 +309,7 @@
     "graph_relaxations": 0,
     "states_pruned": 0,
     "bytes_allocated": 0,
-    "elapsed_ms": 0.0000
+    "elapsed_ms": 1.0000
   },
   {
     "algorithm": "",
@@ -321,7 +321,7 @@
     "graph_relaxations": 0,
     "states_pruned": 0,
     "bytes_allocated": 3200000,
-    "elapsed_ms": 6.0000
+    "elapsed_ms": 4.0000
   },
   {
     "algorithm": "+",
@@ -345,7 +345,7 @@
     "graph_relaxations": 0,
     "states_pruned": 0,
     "bytes_allocated": 0,
-    "elapsed_ms": 32.0000
+    "elapsed_ms": 30.0000
   },
   {
     "algorithm": "MergeSort (Sorted)",
@@ -357,7 +357,7 @@
     "graph_relaxations": 0,
     "states_pruned": 0,
     "bytes_allocated": 640000,
-    "elapsed_ms": 0.0000
+    "elapsed_ms": 1.0000
   },
   {
     "algorithm": "Naive Match (Adversarial)",
@@ -429,6 +429,6 @@
     "graph_relaxations": 0,
     "states_pruned": 22474,
     "bytes_allocated": 18087936,
-    "elapsed_ms": 16.0000
+    "elapsed_ms": 19.0000
   }
 ]
