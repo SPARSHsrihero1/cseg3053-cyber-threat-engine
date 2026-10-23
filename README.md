@@ -184,8 +184,20 @@ TEST SUMMARY: 33 / 33 PASSED (100%)
 
 ---
 
-## 6. Documentation Deliverables
+## 6. Weekly Project Roadmap & Submission Milestones (Oct 23 – Dec 1)
 
-* [`docs/Week1_Requirements_and_Architecture.md`](file:///C:/Users/spars/.gemini/antigravity/scratch/cseg3053-cyber-threat-engine/docs/Week1_Requirements_and_Architecture.md): Formal problem statement, I/O specifications, mathematical loop invariants, edge cases, and Mermaid architecture diagrams.
-* [`docs/Recurrence_Relations_and_Master_Theorem.md`](file:///C:/Users/spars/.gemini/antigravity/scratch/cseg3053-cyber-threat-engine/docs/Recurrence_Relations_and_Master_Theorem.md): Step-by-step mathematical solutions of recurrences via Unrolling, Substitution, Recursion Trees, and Master Theorem (including where Master Theorem fails).
-* [`docs/Complexity_Classes_and_NP_Reductions.md`](file:///C:/Users/spars/.gemini/antigravity/scratch/cseg3053-cyber-threat-engine/docs/Complexity_Classes_and_NP_Reductions.md): P, NP, NP-Complete, and NP-Hard classification with formal polynomial-time reductions for Containment Knapsack and Forensic TSP.
+This project follows a 7-week academic trajectory culminating in the final PBL viva and practical defense on **December 1, 2026**:
+
+| Milestone | Target Dates | Deliverable Report | Key Assessed Concepts |
+| :--- | :--- | :--- | :--- |
+| **Week 1** | Oct 16 – Oct 23 | [`docs/Week1_Requirements_and_Architecture.md`](docs/Week1_Requirements_and_Architecture.md) | Problem formulation, I/O schemas, loop invariants, Mermaid architecture |
+| **Week 2** | Oct 24 – Oct 30 | [`docs/Week2_Algorithmic_Foundations_and_Empirical_Analysis.md`](docs/Week2_Algorithmic_Foundations_and_Empirical_Analysis.md) | Recurrences, Master Theorem limits, empirical sorting/searching benchmarks |
+| **Week 3** | Oct 31 – Nov 06 | [`docs/Week3_Greedy_Method_and_Network_Optimization.md`](docs/Week3_Greedy_Method_and_Network_Optimization.md) | Dijkstra, Prim & Kruskal MST, Huffman compression, Activity Selection |
+| **Week 4** | Nov 07 – Nov 13 | [`docs/Week4_Dynamic_Programming_and_State_Optimization.md`](docs/Week4_Dynamic_Programming_and_State_Optimization.md) | 0/1 Knapsack DP, Matrix Chain, LCS kill-chain, OBST, Bellman-Ford, Floyd-Warshall |
+| **Week 5** | Nov 14 – Nov 20 | [`docs/Week5_Backtracking_and_Branch_and_Bound.md`](docs/Week5_Backtracking_and_Branch_and_Bound.md) | N-Queens, Sum of Subsets, Knapsack BB (FIFO/LIFO/LC), TSP LC-BB |
+| **Week 6** | Nov 21 – Nov 27 | [`docs/Week6_Network_Flow_String_Matching_and_Complexity.md`](docs/Week6_Network_Flow_String_Matching_and_Complexity.md) | Edmonds-Karp Max-Flow/Min-Cut, Matching, CRT, 4 String Matchers, NP Reductions |
+| **Week 7** | Nov 28 – Dec 01 | [`docs/Week7_Final_Integration_and_Defense_Dossier.md`](docs/Week7_Final_Integration_and_Defense_Dossier.md) | Full system capstone integration, 33-test oracle matrix, final viva defense FAQ |
+
+### Theoretical Supplements & Mathematical Proofs
+* [`docs/Recurrence_Relations_and_Master_Theorem.md`](docs/Recurrence_Relations_and_Master_Theorem.md): Derivations using Unrolling, Substitution, Trees, and Master Theorem.
+* [`docs/Complexity_Classes_and_NP_Reductions.md`](docs/Complexity_Classes_and_NP_Reductions.md): Formal polynomial reductions ($\text{SUBSET-SUM} \le_p \text{KNAPSACK}$ and $\text{HAM-CYCLE} \le_p \text{TSP}$).
