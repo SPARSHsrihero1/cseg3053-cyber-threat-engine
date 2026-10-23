@@ -1,0 +1,61 @@
+name: C17 Build, Test & Benchmark
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: # Allows manual 1-click execution directly in GitHub web UI
+
+jobs:
+  build-and-test:
+    name: Build & Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup GCC (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential gcc
+
+      - name: Build Project (Ubuntu / Linux)
+        if: runner.os == 'Linux'
+        run: |
+          make all
+
+      - name: Run Unit Tests (Ubuntu / Linux)
+        if: runner.os == 'Linux'
+        run: |
+          ./bin/test_all
+
+      - name: Run All Demonstration Scenarios (Ubuntu / Linux)
+        if: runner.os == 'Linux'
+        run: |
+          ./bin/soc_engine --run-all-demos
+
+      - name: Build & Test (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          mkdir bin -ErrorAction SilentlyContinue
+          $srcs = "src/core/metrics.c", "src/core/data_generator.c", "src/unit2_divide_conquer.c", "src/unit3_greedy.c", "src/unit4_dp.c", "src/unit5_backtracking_bb.c", "src/unit6_flow_string_crt.c"
+          gcc -std=c17 -Wall -Wextra -O2 -Iinclude $srcs src/main.c -o bin/soc_engine.exe
+          gcc -std=c17 -Wall -Wextra -O2 -Iinclude $srcs tests/test_all.c -o bin/test_all.exe
+          .\bin\test_all.exe
+          .\bin\soc_engine.exe --run-all-demos
+
+      - name: Upload Benchmark Artifacts
+        if: runner.os == 'Linux'
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: |
+            data/benchmark_results.csv
+            data/benchmark_results.json

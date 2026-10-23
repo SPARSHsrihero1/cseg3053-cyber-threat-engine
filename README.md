@@ -1,6 +1,7 @@
 # CSEG3053 DAA PBL — Project 03: Cybersecurity Log Threat Detection Engine
 
 [![Language](https://img.shields.io/badge/Language-Pure%20C%20(C17)-blue.svg)](#)
+[![CI Build & Test](https://github.com/SPARSHsrihero1/cseg3053-cyber-threat-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/SPARSHsrihero1/cseg3053-cyber-threat-engine/actions/workflows/ci.yml)
 [![Standard](https://img.shields.io/badge/Standard--std%3Dc17-informational.svg)](#)
 [![Compiler](https://img.shields.io/badge/GCC--Wall--Wextra--O2-brightgreen.svg)](#)
 [![Tests](https://img.shields.io/badge/Unit%20Tests-33%2F33%20Passing%20(100%25)-success.svg)](#)
