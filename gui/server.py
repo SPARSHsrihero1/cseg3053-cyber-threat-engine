@@ -38,16 +38,31 @@ class SOCHandler(http.server.SimpleHTTPRequestHandler):
                 "base_dir": BASE_DIR,
                 "os": os.name
             })
-        elif path == "/api/benchmarks":
+        elif path == "/api/benchmarks" or path == "/data/benchmark_results.json":
             if os.path.exists(DATA_JSON):
                 with open(DATA_JSON, "r", encoding="utf-8") as f:
                     try:
                         data = json.load(f)
-                        self.send_json_response({"success": True, "benchmarks": data})
+                        if path == "/data/benchmark_results.json":
+                            self.send_json_response(data)
+                        else:
+                            self.send_json_response({"success": True, "benchmarks": data})
                     except Exception as e:
                         self.send_json_response({"success": False, "error": str(e)}, 500)
             else:
                 self.send_json_response({"success": False, "benchmarks": []})
+        elif path == "/data/benchmark_results.csv":
+            if os.path.exists(DATA_CSV):
+                with open(DATA_CSV, "r", encoding="utf-8") as f:
+                    csv_data = f.read().encode("utf-8")
+                    self.send_response(200)
+                    self.send_header("Content-Type", "text/csv; charset=utf-8")
+                    self.send_header("Content-Disposition", "attachment; filename=\"benchmark_results.csv\"")
+                    self.send_header("Content-Length", str(len(csv_data)))
+                    self.end_headers()
+                    self.wfile.write(csv_data)
+            else:
+                self.send_error(404, "Benchmark CSV file not found")
         elif path == "/api/run":
             arg = query.get("target", ["--run-all-demos"])[0]
             valid_args = ["--run-all-demos", "--scenario1", "--scenario2", "--scenario3", "--unit2", "--unit3", "--unit4", "--unit5", "--unit6", "tests"]

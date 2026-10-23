@@ -13,6 +13,10 @@ build/
 *.swp
 *.bak
 
+# Python artifacts
+__pycache__/
+*.pyc
+
 # OS generated files
 Thumbs.db
 Desktop.ini
