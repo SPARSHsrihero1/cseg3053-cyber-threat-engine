@@ -1,0 +1,19 @@
+# Binaries and build outputs
+bin/
+build/
+*.exe
+*.o
+*.obj
+*.pdb
+*.ilk
+
+# VS Code and editor artifacts
+.vscode/
+.idea/
+*.swp
+*.bak
+
+# OS generated files
+Thumbs.db
+Desktop.ini
+.DS_Store
