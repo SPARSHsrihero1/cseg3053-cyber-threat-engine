@@ -141,12 +141,18 @@ In addition to the headless CLI, an interactive SOC analyst Web Dashboard is pro
 * **Algorithmic Workbench Console:** Directly trigger and stream live execution outputs for all 6 syllabus units.
 
 To launch the GUI:
-```bash
-# Windows Batch
-./start_gui.bat
+```powershell
+# Navigate to project repository
+cd C:\Users\spars\.gemini\antigravity\scratch\cseg3053-cyber-threat-engine
 
-# Windows PowerShell
-./start_gui.ps1
+# Start the GUI server
+.\start_gui.bat
+```
+
+Alternative launch commands:
+```powershell
+# PowerShell script
+.\start_gui.ps1
 
 # Direct Python
 python gui/server.py
