@@ -131,7 +131,31 @@ ctest --test-dir build --output-on-failure
 
 ---
 
-## 4. Execution & CLI Usage
+## 4. Interactive SOC Web GUI Dashboard
+
+In addition to the headless CLI, an interactive SOC analyst Web Dashboard is provided in `gui/`:
+
+* **Live Attack Graph Canvas:** Visualizes network hosts, firewall boundaries, and shortest exploit paths (Dijkstra vs. Bellman-Ford).
+* **Interactive Honeypot Grid:** Visualizes $N$-Queens deceptive sensor placement with step-by-step backtracking solutions.
+* **Payload Scanner & Log Inspector:** Interactive comparison of Naive, Rabin-Karp, FA, and KMP string search engines.
+* **Algorithmic Workbench Console:** Directly trigger and stream live execution outputs for all 6 syllabus units.
+
+To launch the GUI:
+```bash
+# Windows Batch
+./start_gui.bat
+
+# Windows PowerShell
+./start_gui.ps1
+
+# Direct Python
+python gui/server.py
+```
+Open your browser to `http://127.0.0.1:8080`.
+
+---
+
+## 5. Execution & CLI Usage
 
 ### Running Unit Tests
 ```bash
@@ -162,7 +186,7 @@ TEST SUMMARY: 33 / 33 PASSED (100%)
 
 ---
 
-## 5. Demonstration Scenarios Summary
+## 6. Demonstration Scenarios Summary
 
 ### Scenario 1: Normal SOC Operation (Baseline Triage & Signature Scanning)
 * Sorts incoming event log streams using Merge Sort vs. Randomized Quick Sort.
@@ -185,7 +209,7 @@ TEST SUMMARY: 33 / 33 PASSED (100%)
 
 ---
 
-## 6. Weekly Project Roadmap & Submission Milestones (Oct 23 – Dec 1)
+## 7. Weekly Project Roadmap & Submission Milestones (Oct 23 – Dec 1)
 
 This project follows a 7-week academic trajectory culminating in the final PBL viva and practical defense on **December 1, 2026**:
 
@@ -202,3 +226,14 @@ This project follows a 7-week academic trajectory culminating in the final PBL v
 ### Theoretical Supplements & Mathematical Proofs
 * [`docs/Recurrence_Relations_and_Master_Theorem.md`](docs/Recurrence_Relations_and_Master_Theorem.md): Derivations using Unrolling, Substitution, Trees, and Master Theorem.
 * [`docs/Complexity_Classes_and_NP_Reductions.md`](docs/Complexity_Classes_and_NP_Reductions.md): Formal polynomial reductions ($\text{SUBSET-SUM} \le_p \text{KNAPSACK}$ and $\text{HAM-CYCLE} \le_p \text{TSP}$).
+
+---
+
+## 8. Ethical, Safety, & Privacy Considerations
+
+The deployment of algorithmic cybersecurity threat detection and automated response systems involves significant ethical, legal, and operational responsibilities:
+
+1. **Telemetry Privacy & Data Minimization:** Raw event logs ingested from corporate endpoints often contain sensitive personal data, unencrypted session cookies, and employee credentials. The engine enforces data minimization by stripping PII before persistence and hashing event identifiers.
+2. **Dual-Use Safeguards:** Algorithmic routines developed for defensive gap identification (such as Dijkstra's exploit path or Floyd-Warshall reachability) possess dual-use potential if turned against external targets. The software contains strict architectural boundaries intended solely for authorized internal audit and defensive analysis.
+3. **Automated Containment Safety:** Automated severing of network connections (via Max-Flow Min-Cut) or machine quarantine (via Knapsack playbooks) could inadvertently cause Denial of Service to mission-critical infrastructure (e.g., healthcare equipment or banking settlement systems). Production deployments require human-in-the-loop analyst sign-off and staged dry-run simulation modes.
+4. **Algorithmic Fairness:** Alert triage must balance greedy short-term prioritization against long-term slow-and-low stealth threats to prevent alert starvation.

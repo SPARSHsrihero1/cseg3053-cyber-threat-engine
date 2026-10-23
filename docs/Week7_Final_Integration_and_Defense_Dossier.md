@@ -62,3 +62,22 @@ This document constitutes the comprehensive evaluation and viva defense dossier 
 
 #### Q3: How does the engine sever data exfiltration links using Ford-Fulkerson?
 **Answer:** The network is modeled as a directed capacitated flow network where the infected data store is the source $s$ and the external attacker is the sink $t$. After augmenting paths using Edmonds-Karp until no residual capacity remains, a BFS from $s$ in the residual graph identifies the set of reachable vertices $S$. By the Max-Flow Min-Cut Theorem, any edge originating in $S$ and terminating outside $S$ with saturated capacity belongs to the Minimum $s$-$t$ Cut. These represent the exact firewall rules to drop to halt exfiltration with minimal collateral disruption.
+
+---
+
+### 4. Ethical, Safety, and Privacy Considerations in Threat Detection
+
+#### 4.1 Telemetry Privacy & Data Minimization (GDPR / HIPAA Compliance)
+* **Log Scrubbing & Pseudonymization:** Raw enterprise logs frequently capture sensitive user information, session tokens, passwords submitted accidentally in HTTP URLs, and internal IP topology. The threat engine adheres to data minimization: raw strings are parsed into structured hashes and normalized threat signatures, stripping extraneous Personally Identifiable Information (PII) before persistent storage.
+* **Cold Storage Integrity:** Huffman compression and hash verification ensure forensic archives cannot be altered post-incident, preserving legal chain-of-custody without exposing unencrypted plaintext data to unauthorized operators.
+
+#### 4.2 Dual-Use Risk & Defensive Governance
+* **Dual-Use Algorithmic Models:** Graph traversal algorithms (Dijkstra's shortest attack path, Floyd-Warshall lateral movement exposure, Bellman-Ford privilege escalation) can theoretically be inverted by adversaries to calculate the most efficient reconnaissance and infiltration pathways.
+* **Access Control & Defensive Boundaries:** The engine is architected strictly for passive internal telemetry and controlled blue-team simulation. Network topology models must be protected with role-based access control (RBAC), ensuring exploit graphs are visible only to authorized SOC personnel.
+
+#### 4.3 Operational Safety & Automated Blast-Radius Control
+* **Containment Risk (Denial of Service):** Automated containment actions—such as dropping network links via the Ford-Fulkerson Minimum $s$-$t$ Cut or taking host services offline using 0/1 Knapsack playbook optimization—carry operational risks. If an alert is a false positive, immediate automated isolation could disrupt critical business operations, financial transactions, or life-support medical devices.
+* **Human-in-the-Loop & Dry-Run Safeguards:** The engine provides algorithmic recommendations with explicit cost/downtime impact scores. In production environments, critical-severity remediations require SOC analyst confirmation (Dry-Run / Staging Mode) before firewall mutations are executed.
+
+#### 4.4 Algorithmic Fairness & Alert Starvation Prevention
+* **Anti-Starvation Guarantees:** Purely greedy scoring algorithms risk starving low-severity alerts, creating blind spots for sophisticated low-and-slow Advanced Persistent Threat (APT) campaigns. By combining greedy heuristics with dynamic programming (LCS sequence alignment) and subset-sum anomaly thresholds, the engine guarantees that low-volume sequential patterns are correlated and escalated before data exfiltration occurs.
