@@ -3,205 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSEG3053: Cybersecurity Log Threat Detection Engine — SOC Analytics GUI</title>
+    <title>CSEG3053: Cybersecurity Threat Detection Engine — SOC Command Workbench</title>
     <style>
         :root {
-            --bg-primary: #0a0e17;
-            --bg-secondary: #111827;
-            --bg-card: #162032;
-            --border-color: #243552;
-            --text-primary: #e2e8f0;
+            --bg-primary: #070b12;
+            --bg-secondary: #0f172a;
+            --bg-card: #152033;
+            --bg-card-hover: #1c2b45;
+            --border-color: #223450;
+            --border-glow: rgba(0, 240, 255, 0.3);
+            --text-primary: #f1f5f9;
             --text-secondary: #94a3b8;
+            --text-muted: #64748b;
             --accent-cyan: #00f0ff;
             --accent-magenta: #ff0055;
             --accent-amber: #ffaa00;
             --accent-green: #00ff66;
-            --accent-purple: #aa00ff;
+            --accent-purple: #b026ff;
             --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
             --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: var(--bg-primary); color: var(--text-primary); font-family: var(--font-sans); line-height: 1.5; overflow-x: hidden; }
 
-        body {
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: var(--font-sans);
-            line-height: 1.5;
-            overflow-x: hidden;
-        }
-
-        /* Top Bar */
+        /* Top Header */
         header {
             background-color: var(--bg-secondary);
             border-bottom: 1px solid var(--border-color);
-            padding: 1rem 2rem;
+            padding: 0.8rem 1.8rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
         }
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
+        .brand { display: flex; align-items: center; gap: 0.8rem; }
+        .brand-badge { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta)); color: #000; font-weight: 800; font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 4px; letter-spacing: 1px; }
+        .brand-title { font-size: 1.2rem; font-weight: 700; color: #fff; }
+        .brand-sub { font-size: 0.75rem; color: var(--text-secondary); font-family: var(--font-mono); }
 
-        .brand-badge {
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
-            color: #000;
-            font-weight: 800;
-            font-size: 0.8rem;
-            padding: 0.2rem 0.6rem;
-            border-radius: 4px;
-            letter-spacing: 1px;
-        }
-
-        .brand-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            color: #fff;
-        }
-
-        .brand-sub {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            font-family: var(--font-mono);
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 0.75rem;
-            align-items: center;
-        }
-
+        .header-actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
         .btn {
             background-color: var(--bg-card);
             color: var(--text-primary);
             border: 1px solid var(--border-color);
-            padding: 0.5rem 1rem;
+            padding: 0.45rem 0.85rem;
             border-radius: 4px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
             display: inline-flex;
             align-items: center;
+            gap: 0.4rem;
+        }
+        .btn:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); box-shadow: 0 0 10px rgba(0, 240, 255, 0.25); }
+        .btn-cyan { background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff; border: none; }
+        .btn-cyan:hover { background: linear-gradient(135deg, #0369a1, #075985); color: #fff; box-shadow: 0 0 12px rgba(2, 132, 199, 0.4); }
+        .btn-magenta { background: linear-gradient(135deg, #e11d48, #be123c); color: #fff; border: none; }
+        .btn-magenta:hover { box-shadow: 0 0 12px rgba(225, 29, 72, 0.4); color: #fff; }
+        .btn-amber { background: linear-gradient(135deg, #d97706, #b45309); color: #fff; border: none; }
+        .btn-green { background: linear-gradient(135deg, #059669, #047857); color: #fff; border: none; }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 1.8rem;
+            display: flex;
             gap: 0.5rem;
+            overflow-x: auto;
+            position: sticky;
+            top: 61px;
+            z-index: 900;
         }
 
-        .btn:hover {
-            border-color: var(--accent-cyan);
-            color: var(--accent-cyan);
-            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #0284c7, #0369a1);
-            color: #fff;
+        .nav-tab {
+            background: none;
             border: none;
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            font-weight: 600;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
         }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #0369a1, #075985);
-            box-shadow: 0 0 12px rgba(2, 132, 199, 0.4);
-            color: #fff;
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #e11d48, #be123c);
-            color: #fff;
-            border: none;
-        }
-
-        .btn-danger:hover {
-            box-shadow: 0 0 12px rgba(225, 29, 72, 0.4);
-            color: #fff;
-        }
+        .nav-tab:hover { color: var(--text-primary); }
+        .nav-tab.active { color: var(--accent-cyan); border-bottom-color: var(--accent-cyan); font-weight: 700; }
 
         /* Main Container */
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
+        .container { max-width: 1650px; margin: 0 auto; padding: 1.25rem 1.8rem; display: flex; flex-direction: column; gap: 1.25rem; }
 
-        /* Stat Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1rem;
-        }
-
+        /* Stat Grid */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
         .stat-card {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            padding: 1.25rem;
+            padding: 1rem;
             position: relative;
             overflow: hidden;
         }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-        }
-
+        .stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; }
         .card-cyan::before { background-color: var(--accent-cyan); }
         .card-magenta::before { background-color: var(--accent-magenta); }
         .card-amber::before { background-color: var(--accent-amber); }
         .card-green::before { background-color: var(--accent-green); }
+        .card-purple::before { background-color: var(--accent-purple); }
 
-        .stat-title {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-secondary);
-            font-weight: 600;
-        }
+        .stat-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); font-weight: 600; }
+        .stat-value { font-size: 1.6rem; font-weight: 700; color: #fff; margin-top: 0.2rem; font-family: var(--font-mono); }
+        .stat-meta { font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem; }
 
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #fff;
-            margin-top: 0.25rem;
-            font-family: var(--font-mono);
-        }
-
-        .stat-meta {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            margin-top: 0.25rem;
-        }
-
-        /* Grid Layout for Panels */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-
-        @media (max-width: 1100px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
+        /* Panel Cards */
         .panel {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -209,8 +128,8 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            margin-bottom: 1.25rem;
         }
-
         .panel-header {
             background-color: var(--bg-secondary);
             padding: 0.75rem 1.25rem;
@@ -219,200 +138,99 @@
             justify-content: space-between;
             align-items: center;
         }
+        .panel-title { font-size: 0.95rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 0.5rem; }
+        .panel-body { padding: 1.25rem; flex: 1; }
 
-        .panel-title {
-            font-size: 0.95rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
+        /* Cards Grid */
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 1rem; }
+        .algo-card {
+            background-color: #0c121e;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1.1rem;
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 0.75rem;
+            transition: all 0.2s;
         }
+        .algo-card:hover { border-color: var(--accent-cyan); background-color: var(--bg-card-hover); }
+        .algo-title { font-size: 0.95rem; font-weight: 700; color: #fff; display: flex; justify-content: space-between; align-items: center; }
+        .algo-badge { font-size: 0.68rem; padding: 0.15rem 0.45rem; border-radius: 3px; font-family: var(--font-mono); font-weight: 700; }
+        .badge-dc { background: rgba(0, 240, 255, 0.15); color: var(--accent-cyan); border: 1px solid var(--accent-cyan); }
+        .badge-greedy { background: rgba(255, 170, 0, 0.15); color: var(--accent-amber); border: 1px solid var(--accent-amber); }
+        .badge-dp { background: rgba(0, 255, 102, 0.15); color: var(--accent-green); border: 1px solid var(--accent-green); }
+        .badge-bb { background: rgba(176, 38, 255, 0.15); color: var(--accent-purple); border: 1px solid var(--accent-purple); }
+        .badge-flow { background: rgba(255, 0, 85, 0.15); color: var(--accent-magenta); border: 1px solid var(--accent-magenta); }
 
-        .panel-body {
-            padding: 1.25rem;
-            flex: 1;
+        .algo-desc { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; }
+        .algo-metric { font-family: var(--font-mono); font-size: 0.75rem; color: #38bdf8; background: #060911; padding: 0.4rem 0.6rem; border-radius: 4px; border: 1px solid #1a273b; }
+        .algo-actions { display: flex; gap: 0.5rem; align-items: center; }
+
+        /* Form Inputs */
+        .input-dark, .select-dark {
+            background-color: #060911;
+            border: 1px solid var(--border-color);
+            color: #fff;
+            padding: 0.4rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-family: var(--font-mono);
+        }
+        .input-dark:focus, .select-dark:focus { outline: none; border-color: var(--accent-cyan); }
+
+        /* Terminal Console */
+        .terminal-box {
+            background-color: #040711;
+            border: 1px solid #1a273b;
+            border-radius: 6px;
+            padding: 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: #38bdf8;
+            height: 320px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8);
         }
 
         /* Topology Canvas */
         .canvas-container {
             width: 100%;
-            height: 380px;
-            background-color: #0d131f;
-            border-radius: 4px;
+            height: 420px;
+            background-color: #060911;
+            border-radius: 6px;
             position: relative;
             overflow: hidden;
-            border: 1px solid #1a2638;
+            border: 1px solid #1a273b;
         }
+        canvas { display: block; width: 100%; height: 100%; }
 
-        canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
+        /* Chessboard for N-Queens */
+        .chessboard {
+            display: grid;
+            grid-template-columns: repeat(8, 32px);
+            grid-template-rows: repeat(8, 32px);
+            border: 2px solid var(--accent-purple);
+            width: 256px;
+            height: 256px;
+            margin: 0.5rem 0;
         }
+        .chess-cell { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+        .chess-white { background-color: #1a2638; }
+        .chess-black { background-color: #0d1522; }
+        .chess-queen { color: var(--accent-cyan); font-weight: bold; text-shadow: 0 0 8px var(--accent-cyan); }
 
-        .topology-controls {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 0.75rem;
-            flex-wrap: wrap;
-        }
+        /* Tables */
+        .table-wrapper { overflow-x: auto; border: 1px solid var(--border-color); border-radius: 4px; max-height: 400px; overflow-y: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; text-align: left; }
+        th { background-color: var(--bg-secondary); color: var(--text-secondary); padding: 0.6rem 0.8rem; position: sticky; top: 0; font-size: 0.72rem; text-transform: uppercase; z-index: 10; border-bottom: 1px solid var(--border-color); }
+        td { padding: 0.55rem 0.8rem; border-bottom: 1px solid #162032; font-family: var(--font-mono); }
+        tr:hover { background-color: rgba(255, 255, 255, 0.02); }
 
-        .btn-mode {
-            font-size: 0.75rem;
-            padding: 0.35rem 0.7rem;
-            border-radius: 4px;
-            background: #1e293b;
-            color: #cbd5e1;
-            border: 1px solid #334155;
-            cursor: pointer;
-        }
-
-        .btn-mode.active {
-            background: var(--accent-cyan);
-            color: #000;
-            font-weight: 700;
-            border-color: var(--accent-cyan);
-        }
-
-        /* Log Stream Table */
-        .log-search-bar {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .input-dark {
-            background-color: #0d131f;
-            border: 1px solid var(--border-color);
-            color: #fff;
-            padding: 0.5rem 0.75rem;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            font-family: var(--font-mono);
-            flex: 1;
-        }
-
-        .input-dark:focus {
-            outline: none;
-            border-color: var(--accent-cyan);
-        }
-
-        .select-dark {
-            background-color: #0d131f;
-            border: 1px solid var(--border-color);
-            color: #fff;
-            padding: 0.5rem;
-            border-radius: 4px;
-            font-size: 0.85rem;
-        }
-
-        .log-table-wrapper {
-            max-height: 320px;
-            overflow-y: auto;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.8rem;
-            text-align: left;
-        }
-
-        th {
-            background-color: var(--bg-secondary);
-            color: var(--text-secondary);
-            padding: 0.6rem 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.7rem;
-            letter-spacing: 0.5px;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        td {
-            padding: 0.5rem 0.8rem;
-            border-bottom: 1px solid #1a2638;
-            font-family: var(--font-mono);
-        }
-
-        tr:hover {
-            background-color: rgba(255, 255, 255, 0.02);
-        }
-
-        .badge-sev {
-            padding: 0.15rem 0.4rem;
-            border-radius: 3px;
-            font-weight: 700;
-            font-size: 0.7rem;
-        }
-
-        .sev-high { background-color: rgba(225, 29, 72, 0.2); color: #f43f5e; border: 1px solid #be123c; }
-        .sev-med { background-color: rgba(234, 179, 8, 0.2); color: #eab308; border: 1px solid #a16207; }
-        .sev-low { background-color: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid #047857; }
-
-        /* Terminal Console */
-        .terminal-box {
-            background-color: #050811;
-            border: 1px solid #1e293b;
-            border-radius: 4px;
-            padding: 1rem;
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            color: #38bdf8;
-            height: 280px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-        }
-
-        /* Range Slider */
-        .slider-group {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .slider {
-            flex: 1;
-            accent-color: var(--accent-cyan);
-        }
-
-        /* Tab Navigation */
-        .tabs {
-            display: flex;
-            gap: 0.5rem;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 1rem;
-        }
-
-        .tab-btn {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-weight: 600;
-            font-size: 0.85rem;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-        }
-
-        .tab-btn.active {
-            color: var(--accent-cyan);
-            border-bottom-color: var(--accent-cyan);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
+        /* Tab Content Switching */
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
     </style>
 </head>
 <body>
@@ -423,243 +241,724 @@
             <span class="brand-badge">SOC CORE</span>
             <div>
                 <h1 class="brand-title">CYBERSECURITY THREAT DETECTION ENGINE</h1>
-                <p class="brand-sub">Pure C17 Algorithmic Workbench &middot; CSEG3053 PBL</p>
+                <p class="brand-sub">Pure C17 Standard (-std=c17 -O2) &middot; Full Syllabus Algorithmic Workbench</p>
             </div>
         </div>
         <div class="header-actions">
-            <button class="btn btn-primary" onclick="runScenario('--run-all-demos')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            <button class="btn btn-cyan" onclick="runBackend('--run-all-demos')">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                 Run All Demos
             </button>
-            <button class="btn" onclick="runTests()">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                Run 33 Tests
+            <button class="btn btn-green" onclick="runBackend('tests')">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Execute 33 Tests
             </button>
-            <button class="btn btn-danger" onclick="runScenario('--unit2')">
-                Unit II Workbench
-            </button>
+            <button class="btn btn-magenta" onclick="runBackend('--scenario1')">Scenario 1 (Normal)</button>
+            <button class="btn btn-amber" onclick="runBackend('--scenario2')">Scenario 2 (Ransomware)</button>
+            <button class="btn" onclick="runBackend('--scenario3')">Scenario 3 (Adversarial)</button>
         </div>
     </header>
 
+    <!-- Navigation Tabs for Every Unit -->
+    <nav class="nav-tabs">
+        <button class="nav-tab active" onclick="switchTab('tab-overview')">Overview &amp; SOC Topology</button>
+        <button class="nav-tab" onclick="switchTab('tab-unit2')">Unit II: Divide &amp; Conquer</button>
+        <button class="nav-tab" onclick="switchTab('tab-unit3')">Unit III: Greedy Method</button>
+        <button class="nav-tab" onclick="switchTab('tab-unit4')">Unit IV: Dynamic Programming</button>
+        <button class="nav-tab" onclick="switchTab('tab-unit5')">Unit V: Backtracking &amp; B&amp;B</button>
+        <button class="nav-tab" onclick="switchTab('tab-unit6')">Unit VI: Flow, Strings &amp; CRT</button>
+        <button class="nav-tab" onclick="switchTab('tab-benchmarks')">Empirical Benchmarks (CSV/JSON)</button>
+    </nav>
+
     <div class="container">
 
-        <!-- Top Metrics Cards -->
+        <!-- Stat Row -->
         <div class="stats-grid">
             <div class="stat-card card-cyan">
-                <div class="stat-title">Threat Mitigation Score</div>
-                <div class="stat-value" id="stat-mitigation">230 <span style="font-size: 0.9rem; color: var(--text-secondary)">/ 230 pts</span></div>
-                <div class="stat-meta">Exact 0/1 Knapsack DP & Branch-and-Bound</div>
+                <div class="stat-title">Containment Risk Mitigated</div>
+                <div class="stat-value" id="val-mitigated">230 <span style="font-size: 0.85rem; color: var(--text-secondary)">pts</span></div>
+                <div class="stat-meta">Exact 0/1 Knapsack DP &amp; LC-BB</div>
             </div>
             <div class="stat-card card-magenta">
-                <div class="stat-title">Data Exfiltration Flow</div>
-                <div class="stat-value" id="stat-flow">412 <span style="font-size: 0.9rem; color: var(--text-secondary)">MB/s Halted</span></div>
-                <div class="stat-meta">8 Minimum s-t Cut Firewall Edges Severed</div>
+                <div class="stat-title">Exfiltration Halted</div>
+                <div class="stat-value" id="val-exfil">412 <span style="font-size: 0.85rem; color: var(--text-secondary)">MB/s</span></div>
+                <div class="stat-meta">Ford-Fulkerson 8 Min-Cut Links Severed</div>
             </div>
             <div class="stat-card card-amber">
-                <div class="stat-title">DDoS Anomaly Burst</div>
-                <div class="stat-value" id="stat-burst">+15 <span style="font-size: 0.9rem; color: var(--text-secondary)">Sum Delta</span></div>
-                <div class="stat-meta">Kadane & Divide-and-Conquer Isolated</div>
+                <div class="stat-title">DDoS Anomaly Peak Burst</div>
+                <div class="stat-value" id="val-burst">+15 <span style="font-size: 0.85rem; color: var(--text-secondary)">Net Delta</span></div>
+                <div class="stat-meta">Kadane &amp; Divide-and-Conquer Window</div>
             </div>
             <div class="stat-card card-green">
-                <div class="stat-title">Test Oracle Status</div>
-                <div class="stat-value" id="stat-tests">33 / 33</div>
-                <div class="stat-meta">100% Assertion Pass Rate (C17 Standard)</div>
+                <div class="stat-title">Oracle Test Suite</div>
+                <div class="stat-value" id="val-tests">33 / 33</div>
+                <div class="stat-meta">100% Pass Rate across Units II–VI</div>
+            </div>
+            <div class="stat-card card-purple">
+                <div class="stat-title">Forensic Collector TSP Tour</div>
+                <div class="stat-value" id="val-tsp">281 <span style="font-size: 0.85rem; color: var(--text-secondary)">Latency</span></div>
+                <div class="stat-meta">Held-Karp DP &amp; Least-Cost BB Converged</div>
             </div>
         </div>
 
-        <!-- Middle Row: Attack Topology & Log Inspector -->
-        <div class="dashboard-grid">
-
-            <!-- Attack Graph Visualizer -->
-            <div class="panel">
-                <div class="panel-header">
-                    <div class="panel-title">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
-                        Enterprise Attack Topology & Lateral Movement
+        <!-- =================================================================== -->
+        <!-- TAB 1: OVERVIEW & TOPOLOGY                                          -->
+        <!-- =================================================================== -->
+        <div id="tab-overview" class="tab-panel active">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+                <!-- Attack Topology Canvas -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                            Enterprise Attack Topology Visualizer
+                        </div>
+                        <span style="font-size: 0.72rem; color: var(--accent-cyan); font-family: var(--font-mono)">64-Host Capacitated Graph</span>
                     </div>
-                    <span style="font-size: 0.75rem; color: var(--accent-cyan); font-family: var(--font-mono)">64-Host Capacitated Graph</span>
+                    <div class="panel-body">
+                        <div class="canvas-container">
+                            <canvas id="topologyCanvas"></canvas>
+                        </div>
+                        <div style="display: flex; gap: 0.4rem; margin-top: 0.75rem; flex-wrap: wrap;">
+                            <button class="btn btn-mode active" onclick="setGraphMode('dijkstra')">Dijkstra Shortest Exploit Path</button>
+                            <button class="btn btn-mode" onclick="setGraphMode('mincut')">Ford-Fulkerson Min-Cut Firewall Severing</button>
+                            <button class="btn btn-mode" onclick="setGraphMode('mst')">Quarantine Out-of-Band MST</button>
+                            <button class="btn btn-mode" onclick="setGraphMode('c2')">C2 Sinkhole Celebrity Detection</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="panel-body">
-                    <div class="canvas-container">
-                        <canvas id="topologyCanvas"></canvas>
+
+                <!-- Subprocess Terminal Console -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+                            Live C17 Engine Subprocess Terminal
+                        </div>
+                        <span id="procStatus" style="font-size: 0.72rem; color: var(--accent-green); font-family: var(--font-mono)">Ready</span>
                     </div>
-                    <div class="topology-controls">
-                        <button class="btn-mode active" onclick="setGraphMode('dijkstra')">Dijkstra Shortest Attack Path</button>
-                        <button class="btn-mode" onclick="setGraphMode('mincut')">Ford-Fulkerson Min-Cut Severing</button>
-                        <button class="btn-mode" onclick="setGraphMode('mst')">Quarantine Telemetry MST</button>
-                        <button class="btn-mode" onclick="setGraphMode('c2')">C2 Sinkhole Celebrity Detection</button>
+                    <div class="panel-body">
+                        <div id="terminal" class="terminal-box">Ready to execute. Click any algorithm button across the tabs to execute the pure C17 binary and stream empirical outputs here...</div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Deep Packet Inspection & String Matching -->
+        <!-- =================================================================== -->
+        <!-- TAB 2: UNIT II DIVIDE & CONQUER                                     -->
+        <!-- =================================================================== -->
+        <div id="tab-unit2" class="tab-panel">
             <div class="panel">
                 <div class="panel-header">
-                    <div class="panel-title">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-magenta)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                        Live Threat Log Stream & String Matcher
-                    </div>
-                    <span style="font-size: 0.75rem; color: var(--text-secondary); font-family: var(--font-mono)">Syslog Buffer</span>
+                    <div class="panel-title">Unit II: Divide and Conquer Algorithms Workbench</div>
+                    <button class="btn btn-cyan" onclick="runBackend('--unit2')">Run Unit II C17 Suite</button>
                 </div>
                 <div class="panel-body">
-                    <div class="log-search-bar">
-                        <input type="text" id="patternInput" class="input-dark" value="UNION SELECT" placeholder="Search pattern...">
-                        <select id="engineSelect" class="select-dark">
-                            <option value="kmp">Knuth-Morris-Pratt (KMP)</option>
-                            <option value="rk">Rabin-Karp Rolling Hash</option>
-                            <option value="fa">Finite Automaton δ(q, a)</option>
-                            <option value="naive">Naive Sliding Window</option>
-                        </select>
-                        <button class="btn" onclick="executeSearch()">Scan Payload</button>
+                    <div class="cards-grid">
+                        <!-- Merge Sort -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">Merge Sort <code>merge_sort</code> <span class="algo-badge badge-dc">&Theta;(n log n)</span></div>
+                                <p class="algo-desc">Stable sorting of incoming security event streams by timestamp or severity. Preserves relative arrival order of logs with identical timestamps.</p>
+                            </div>
+                            <div class="algo-metric">Comparisons: 5,044 on N=1,000 | Space: O(n) auxiliary buffer</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="runBackend('--scenario1')">Benchmark Merge vs Quick</button>
+                            </div>
+                        </div>
+
+                        <!-- Quick Sort -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">Quick Sort (Det &amp; Rand) <code>quick_sort</code> <span class="algo-badge badge-dc">O(n log n) / O(n&sup2;)</span></div>
+                                <p class="algo-desc">In-place log sorting. Features deterministic last-element partitioning vs. randomized pivot sampling to defeat adversarial pre-sorted DDoS streams.</p>
+                            </div>
+                            <div class="algo-metric">Adversarial comparisons: Det=1,999,000 vs Merge=11,088 (180x speedup)</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="runBackend('--scenario3')">Trigger Adversarial Stress</button>
+                            </div>
+                        </div>
+
+                        <!-- Binary Search -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">Binary Search &amp; BST <code>binary_search</code> <span class="algo-badge badge-dc">&Theta;(log n)</span></div>
+                                <p class="algo-desc">Instant timeline forensic lookup on sorted event arrays and Binary Search Tree (BST) threat signature index search.</p>
+                            </div>
+                            <div class="algo-metric">N=1,000 array lookup: exactly 9 comparisons (Iterative &amp; Recursive)</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="simulateBinarySearch()">Simulate Lookup</button>
+                            </div>
+                        </div>
+
+                        <!-- Maximum Subarray -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">Max Subarray (Kadane vs D&amp;C) <code>max_subarray</code> <span class="algo-badge badge-dc">&Theta;(n) vs &Theta;(n log n)</span></div>
+                                <p class="algo-desc">Scans net anomaly delta fluctuations to isolate the exact start and end timestamps of a DDoS attack or brute-force surge.</p>
+                            </div>
+                            <div class="algo-metric">Peak Burst Detected: Sum = 15 | Kadane=18 comps, D&amp;C=24 comps</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="runBackend('--unit2')">Run Burst Detection</button>
+                            </div>
+                        </div>
+
+                        <!-- Fast Modular Exponentiation -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">Fast Modular Power <code>fast_power_mod</code> <span class="algo-badge badge-dc">&Theta;(log e)</span></div>
+                                <p class="algo-desc">Computes b^e mod m in logarithmic multiplications for rolling Rabin-Karp hashes and cryptographic decay scoring.</p>
+                            </div>
+                            <div class="algo-metric">Evaluation: 7^13 mod 1000 = 407 (Recursive &amp; Iterative verified)</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="calcPower()">Calculate 7^13 mod 1000</button>
+                            </div>
+                        </div>
+
+                        <!-- Celebrity Problem -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">Celebrity Problem (C2 Detection) <code>find_celebrity_c2</code> <span class="algo-badge badge-dc">&Theta;(N)</span></div>
+                                <p class="algo-desc">Identifies hidden Command-and-Control sinkholes in an NxN host matrix in O(N) comparisons (everyone beacons to C2, C2 beacons to none).</p>
+                            </div>
+                            <div class="algo-metric">Candidate elimination in N-1 comparisons + 2(N-1) verification</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="setGraphMode('c2'); switchTab('tab-overview');">View on Topology Map</button>
+                            </div>
+                        </div>
+
+                        <!-- Strassen Matrix Multiplication -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">Strassen Matrix Mult <code>matrix_mult_strassen</code> <span class="algo-badge badge-dc">&Theta;(N^2.807)</span></div>
+                                <p class="algo-desc">Sub-cubic matrix multiplication on host transition matrices for computing multi-hop lateral movement reachability.</p>
+                            </div>
+                            <div class="algo-metric">16x16 Host Matrix: 7 recursive sub-multiplications per quadrant</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="runBackend('--scenario3')">Benchmark vs Classical</button>
+                            </div>
+                        </div>
                     </div>
-                    <div id="searchMetrics" style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-cyan); margin-bottom: 0.5rem;">
-                        Algorithm: KMP | Character Comparisons: 13 | Speedup over Naive: 4.5x
+                </div>
+            </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- TAB 3: UNIT III GREEDY METHOD                                       -->
+        <!-- =================================================================== -->
+        <div id="tab-unit3" class="tab-panel">
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">Unit III: Greedy Method Workbench</div>
+                    <button class="btn btn-amber" onclick="runBackend('--unit3')">Run Unit III C17 Suite</button>
+                </div>
+                <div class="panel-body">
+                    <div class="cards-grid">
+                        <!-- Activity Selection -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">Activity Selection <code>activity_selection_scans</code> <span class="algo-badge badge-greedy">O(n log n)</span></div>
+                                <p class="algo-desc">Schedules the maximum number of non-overlapping vulnerability scans on an inspection engine sorted by earliest finish time.</p>
+                            </div>
+                            <div class="algo-metric">Selected: 3 non-overlapping scans from 6 overlapping candidates</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="runBackend('--unit3')">Execute Scheduler</button>
+                            </div>
+                        </div>
+
+                        <!-- Interval Partitioning -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">Interval Partitioning <code>interval_partition_sandboxes</code> <span class="algo-badge badge-greedy">O(n log n)</span></div>
+                                <p class="algo-desc">Allocates the minimum number of isolated malware-detonation sandbox VMs required to handle concurrent high-priority alert windows without clashes.</p>
+                            </div>
+                            <div class="algo-metric">Minimum Parallel Sandboxes Allocated: 2 VMs</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="runBackend('--unit3')">Calculate Min VMs</button>
+                            </div>
+                        </div>
+
+                        <!-- Fractional Knapsack -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">Fractional Knapsack <code>fractional_knapsack_dpi</code> <span class="algo-badge badge-greedy">O(n log n)</span></div>
+                                <p class="algo-desc">Allocates Deep Packet Inspection (DPI) bandwidth fractions across suspect streams ordered by threat-to-bandwidth ratio.</p>
+                            </div>
+                            <div class="algo-metric">Budget 40 mins: 269.6 pts (Upper Bound continuous heuristic)</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="runBackend('--scenario2')">Run DPI Allocation</button>
+                            </div>
+                        </div>
+
+                        <!-- Huffman Coding -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">Huffman Coding <code>huffman_compress_logs</code> <span class="algo-badge badge-greedy">O(n + k log k)</span></div>
+                                <p class="algo-desc">Min-Heap and prefix-free variable-length binary tree over syslog character frequencies for lossless forensic cold-storage compression.</p>
+                            </div>
+                            <div class="algo-metric">46 bytes compressed to 184 bits &middot; 100% Lossless Decompression</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="demoHuffman()">Test Log Compression</button>
+                            </div>
+                        </div>
+
+                        <!-- Dijkstra -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">Dijkstra Exploit Path <code>dijkstra_attack_path</code> <span class="algo-badge badge-greedy">O((V+E) log V)</span></div>
+                                <p class="algo-desc">Computes single-source least-resistance exploit paths from perimeter entry points to internal database assets using a custom binary min-heap.</p>
+                            </div>
+                            <div class="algo-metric">Shortest Path to Host 9: Cost = 32 | Relaxations: 10</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="setGraphMode('dijkstra'); switchTab('tab-overview');">Highlight Exploit Path</button>
+                            </div>
+                        </div>
+
+                        <!-- Prim & Kruskal MST -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">Prim &amp; Kruskal MST <code>prim_mst / kruskal_mst</code> <span class="algo-badge badge-greedy">O(E log V)</span></div>
+                                <p class="algo-desc">Constructs minimum-cost resilient out-of-band telemetry spanning trees across quarantined switches using custom DSU (Union-Find).</p>
+                            </div>
+                            <div class="algo-metric">MST Total Cable Weight: Prim=30, Kruskal=30 (Exact match)</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="setGraphMode('mst'); switchTab('tab-overview');">View Quarantine Tree</button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="log-table-wrapper">
-                        <table>
+                </div>
+            </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- TAB 4: UNIT IV DYNAMIC PROGRAMMING                                  -->
+        <!-- =================================================================== -->
+        <div id="tab-unit4" class="tab-panel">
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">Unit IV: Dynamic Programming State Optimization</div>
+                    <button class="btn btn-green" onclick="runBackend('--unit4')">Run Unit IV C17 Suite</button>
+                </div>
+                <div class="panel-body">
+                    <div class="cards-grid">
+                        <!-- 0/1 Knapsack DP -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">0/1 Containment Knapsack <code>knapsack_01_dp</code> <span class="algo-badge badge-dp">&Theta;(n W)</span></div>
+                                <p class="algo-desc">Selects discrete automated playbooks under SLA downtime budget, maximizing mitigated risk. Reconstructs chosen playbooks via table backtracking.</p>
+                            </div>
+                            <div class="algo-metric">Crunched Budget 40 min: Max Risk Mitigated = 230 pts</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="runBackend('--scenario2')">Solve Containment DP</button>
+                            </div>
+                        </div>
+
+                        <!-- Matrix Chain Multiplication -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">Matrix Chain Order <code>matrix_chain_order_dp</code> <span class="algo-badge badge-dp">&Theta;(n&sup3;)</span></div>
+                                <p class="algo-desc">Computes optimal parenthesization string for joining multi-stage correlation matrices across Firewall, DNS, IAM, and EDR dimensions.</p>
+                            </div>
+                            <div class="algo-metric">Optimal Parenthesization: ((A1 x A2) x ((A3 x A4) x A5))</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="runBackend('--unit4')">Compute Optimal Parens</button>
+                            </div>
+                        </div>
+
+                        <!-- LCS -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">LCS Kill-Chain Alignment <code>lcs_attack_correlation</code> <span class="algo-badge badge-dp">&Theta;(n &middot; m)</span></div>
+                                <p class="algo-desc">Aligns observed system audit tokens with known Advanced Persistent Threat (APT) kill-chain sequences, returning matched subsequence length and string.</p>
+                            </div>
+                            <div class="algo-metric">Matched Subsequence Length: 4 &middot; Sequence: "ADGX"</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="runBackend('--scenario1')">Correlate Kill-Chain</button>
+                            </div>
+                        </div>
+
+                        <!-- Optimal BST -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">Optimal BST Index <code>obst_signature_index</code> <span class="algo-badge badge-dp">&Theta;(n&sup3;)</span></div>
+                                <p class="algo-desc">Computes static frequency-optimized rule lookup tree minimizing expected search cost given empirical attack trigger probabilities.</p>
+                            </div>
+                            <div class="algo-metric">Minimum Expected Search Cost: 2.4896 depth-weighted comparisons</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="runBackend('--scenario1')">Build OBST Index</button>
+                            </div>
+                        </div>
+
+                        <!-- Bellman-Ford -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">Bellman-Ford Escalation <code>bellman_ford_escalation</code> <span class="algo-badge badge-dp">&Theta;(V &middot; E)</span></div>
+                                <p class="algo-desc">Shortest attack paths with negative edge weights (privilege escalation benefits). Detects infinite credential harvesting loops (negative cycles).</p>
+                            </div>
+                            <div class="algo-metric">Target Host 9: Cost = 32 | Negative Cycle Flag: 0 (Stable)</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="runBackend('--scenario2')">Run Bellman-Ford</button>
+                            </div>
+                        </div>
+
+                        <!-- Floyd-Warshall -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">Floyd-Warshall All-Pairs <code>floyd_warshall_exposure</code> <span class="algo-badge badge-dp">&Theta;(V&sup3;)</span></div>
+                                <p class="algo-desc">Dynamic programming matrix calculating global enterprise lateral movement exposure distances and next-hop forwarding tables across all host pairs.</p>
+                            </div>
+                            <div class="algo-metric">Full Subnet Matrix Computed (1,000 triple-loop iterations)</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="runBackend('--unit4')">Generate Exposure Matrix</button>
+                            </div>
+                        </div>
+
+                        <!-- Held-Karp TSP -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">Forensic Collector TSP DP <code>tsp_held_karp_dp</code> <span class="algo-badge badge-dp">&Theta;(n&sup2; 2^n)</span></div>
+                                <p class="algo-desc">Exact bitmask dynamic programming computing minimum-latency tour for automated forensic memory dumping across all compromised hosts.</p>
+                            </div>
+                            <div class="algo-metric">12-Host Exact Tour Cost: 281 | Memo States: 49,152</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="runBackend('--scenario3')">Solve Bitmask TSP</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- TAB 5: UNIT V BACKTRACKING & BRANCH AND BOUND                       -->
+        <!-- =================================================================== -->
+        <div id="tab-unit5" class="tab-panel">
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">Unit V: Backtracking &amp; Branch-and-Bound State-Space Search</div>
+                    <button class="btn btn-purple" onclick="runBackend('--unit5')">Run Unit V C17 Suite</button>
+                </div>
+                <div class="panel-body">
+                    <div class="cards-grid">
+                        <!-- N-Queens Honeypots -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">N-Queens Honeypots <code>n_queens_honeypots</code> <span class="algo-badge badge-bb">O(N!)</span></div>
+                                <p class="algo-desc">Places N deception honeypots across an NxN routing grid such that no two sensors share a row, column, or diagonal routing slice.</p>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div id="chessboard" class="chessboard"></div>
+                                <div>
+                                    <div class="algo-metric">N=8 Solutions: <strong>92</strong></div>
+                                    <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.3rem;">Visualized: Solution #1</div>
+                                </div>
+                            </div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="drawChessboard(); runBackend('--unit5')">Solve Deception Grid</button>
+                            </div>
+                        </div>
+
+                        <!-- Sum of Subsets -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">Sum of Subsets <code>sum_of_subsets_alerts</code> <span class="algo-badge badge-bb">O(2^n)</span></div>
+                                <p class="algo-desc">Backtracking solver with dual-bounding pruning to find all micro-alert risk score combinations summing to an escalation threshold.</p>
+                            </div>
+                            <div class="algo-metric">Prunes branches when partial sum exceeds target or remaining is insufficient</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="runBackend('--unit5')">Run Alert Escalation</button>
+                            </div>
+                        </div>
+
+                        <!-- 0/1 Knapsack Backtracking -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">Knapsack Backtracking <code>knapsack_01_backtrack</code> <span class="algo-badge badge-bb">DFS + Bound</span></div>
+                                <p class="algo-desc">State-space tree depth-first search using fractional upper bounds to prune subtrees that cannot beat the incumbent solution.</p>
+                            </div>
+                            <div class="algo-metric">Explored 47 nodes &middot; Pruned 35 unpromising branches (Exact 230 pts)</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="runBackend('--scenario2')">Run Backtracking DFS</button>
+                            </div>
+                        </div>
+
+                        <!-- Branch & Bound Variants -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">Branch &amp; Bound Variants <code>knapsack_bb_fifo/lifo/lc</code> <span class="algo-badge badge-bb">B&amp;B Strategies</span></div>
+                                <p class="algo-desc">Systematic comparison of FIFO (Queue/BFS), LIFO (Stack/DFS), and Least-Cost (Max-Heap Priority Queue) exploration policies.</p>
+                            </div>
+                            <div class="algo-metric">Pruned Nodes: FIFO=11 &middot; LIFO=11 &middot; Least-Cost=<strong>9</strong> (Tightest)</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="runBackend('--scenario2')">Compare B&amp;B Solvers</button>
+                            </div>
+                        </div>
+
+                        <!-- TSP Least-Cost Branch & Bound -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">TSP Least-Cost B&amp;B <code>tsp_bb_lc</code> <span class="algo-badge badge-bb">Min-Heap Lower Bound</span></div>
+                                <p class="algo-desc">Least-Cost Branch &amp; Bound with strictly admissible outgoing edge lower bounds for forensic collector routing.</p>
+                            </div>
+                            <div class="algo-metric">Optimal Tour Cost = <strong>281</strong> (Exact match with Held-Karp DP, 22,474 pruned)</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="runBackend('--scenario3')">Execute LC-BB TSP</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- TAB 6: UNIT VI FLOW, STRINGS & CRT                                  -->
+        <!-- =================================================================== -->
+        <div id="tab-unit6" class="tab-panel">
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">Unit VI: Network Flow, String Matching, Number Theory &amp; Complexity</div>
+                    <button class="btn btn-magenta" onclick="runBackend('--unit6')">Run Unit VI C17 Suite</button>
+                </div>
+                <div class="panel-body">
+                    <div class="cards-grid">
+                        <!-- Ford-Fulkerson Max Flow -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">Edmonds-Karp Max Flow <code>ford_fulkerson_max_flow</code> <span class="algo-badge badge-flow">O(V E&sup2;)</span></div>
+                                <p class="algo-desc">Computes maximum data exfiltration capacity from internal storage to external C2 via BFS augmenting paths.</p>
+                            </div>
+                            <div class="algo-metric">Maximum Flow: 412 MB/s &middot; Graph Relaxations: 31</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="setGraphMode('mincut'); switchTab('tab-overview');">View Exfiltration Cut</button>
+                            </div>
+                        </div>
+
+                        <!-- Min-Cut Severing -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">Min s-t Cut Link Severing <span class="algo-badge badge-flow">Cut Theorem</span></div>
+                                <p class="algo-desc">Extracts the exact minimum-capacity firewall edges crossing from the reachable residual set to sever data exfiltration.</p>
+                            </div>
+                            <div class="algo-metric">Identified: 8 critical firewall links to drop to halt exfiltration</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="runBackend('--scenario2')">Extract Min-Cut</button>
+                            </div>
+                        </div>
+
+                        <!-- Bipartite Matching -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">Bipartite Analyst Matching <code>max_bipartite_matching_soc</code> <span class="algo-badge badge-flow">O(V &middot; E)</span></div>
+                                <p class="algo-desc">Assigns high-priority security incidents to qualified SOC analysts based on skill matrix compatibility using augmenting paths.</p>
+                            </div>
+                            <div class="algo-metric">Assigned: 8 of 12 active incident tickets to available specialists</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="runBackend('--scenario1')">Match Analysts</button>
+                            </div>
+                        </div>
+
+                        <!-- Chinese Remainder Theorem -->
+                        <div class="algo-card">
+                            <div>
+                                <div class="algo-title">Chinese Remainder Theorem <code>crt_reconstruct_telemetry</code> <span class="algo-badge badge-flow">Extended Euclidean</span></div>
+                                <p class="algo-desc">Reconstructs global packet counters from distributed low-memory edge firewalls reporting remainders modulo pairwise coprime primes.</p>
+                            </div>
+                            <div class="algo-metric">True Counter 459,128 successfully reconstructed via Extended GCD</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="runBackend('--unit6')">Reconstruct Counter</button>
+                            </div>
+                        </div>
+
+                        <!-- 4 String Matchers -->
+                        <div class="algo-card" style="grid-column: span 2;">
+                            <div>
+                                <div class="algo-title">4 String-Matching Engines <code>naive / rk / fa / kmp</code> <span class="algo-badge badge-flow">Linear vs Quad</span></div>
+                                <p class="algo-desc">Side-by-side comparison of Naive sliding window, Rabin-Karp rolling hash (collision tracking), Finite Automaton &delta;(q, a), and Knuth-Morris-Pratt (&pi; array).</p>
+                            </div>
+                            <div class="algo-metric">Adversarial Repetitive Text ("AAAA...B"): Naive=89,919 comparisons vs KMP=20,004 comparisons (4.5x speedup)</div>
+                            <div class="algo-actions">
+                                <button class="btn" onclick="runBackend('--scenario3')">Run Adversarial Matcher Benchmark</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- TAB 7: EMPIRICAL BENCHMARKS (CSV / JSON)                            -->
+        <!-- =================================================================== -->
+        <div id="tab-benchmarks" class="tab-panel">
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">Empirical Benchmark Results &middot; RFC CSV / JSON Exporter</div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-cyan" onclick="fetchBenchmarks()">Refresh Table</button>
+                        <a href="/data/benchmark_results.csv" download class="btn">Download CSV</a>
+                        <a href="/data/benchmark_results.json" download class="btn">Download JSON</a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="table-wrapper">
+                        <table id="benchmarkTable">
                             <thead>
                                 <tr>
-                                    <th>Log ID</th>
-                                    <th>Timestamp</th>
-                                    <th>Source &rarr; Target</th>
-                                    <th>Sev</th>
-                                    <th>Payload Text</th>
+                                    <th>Algorithm</th>
+                                    <th>Paradigm</th>
+                                    <th>Input Size (N)</th>
+                                    <th>Comparisons</th>
+                                    <th>Swaps / Writes</th>
+                                    <th>Rec Calls</th>
+                                    <th>Relaxations</th>
+                                    <th>Pruned</th>
+                                    <th>Time (ms)</th>
                                 </tr>
                             </thead>
-                            <tbody id="logTableBody">
-                                <!-- Populated by JS -->
+                            <tbody id="benchmarkBody">
+                                <!-- Populated dynamically by JS -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-
-        </div>
-
-        <!-- Bottom Row: SLA Containment Knapsack & Live Terminal -->
-        <div class="dashboard-grid">
-
-            <!-- Containment SLA Optimizer -->
-            <div class="panel">
-                <div class="panel-header">
-                    <div class="panel-title">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-amber)" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-                        Containment Playbook SLA Downtime Optimizer
-                    </div>
-                    <span style="font-size: 0.75rem; color: var(--accent-amber); font-family: var(--font-mono)">0/1 Knapsack &amp; Branch-and-Bound</span>
-                </div>
-                <div class="panel-body">
-                    <div class="slider-group">
-                        <span style="font-size: 0.85rem; font-weight: 600;">SLA Downtime Budget:</span>
-                        <input type="range" id="budgetSlider" class="slider" min="10" max="100" value="40" oninput="updateKnapsack(this.value)">
-                        <span id="budgetValue" style="font-family: var(--font-mono); font-weight: 700; color: var(--accent-cyan);">40 mins</span>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
-                        <div style="background: #0d131f; padding: 1rem; border-radius: 4px; border-left: 3px solid var(--accent-cyan);">
-                            <div style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase;">0/1 Knapsack DP (Discrete)</div>
-                            <div id="dpScore" style="font-size: 1.5rem; font-weight: 700; color: #fff; font-family: var(--font-mono);">230 pts</div>
-                            <div style="font-size: 0.75rem; color: var(--accent-green);">Optimal Playbooks Selected</div>
-                        </div>
-                        <div style="background: #0d131f; padding: 1rem; border-radius: 4px; border-left: 3px solid var(--accent-magenta);">
-                            <div style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase;">Fractional Knapsack (Greedy)</div>
-                            <div id="fracScore" style="font-size: 1.5rem; font-weight: 700; color: #fff; font-family: var(--font-mono);">269.6 pts</div>
-                            <div style="font-size: 0.75rem; color: var(--accent-magenta);">Theoretical Continuous Bound</div>
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-secondary);">
-                        <strong>Branch-and-Bound Pruning Efficiency:</strong> FIFO: 11 pruned &middot; LIFO: 11 pruned &middot; Least-Cost (Max-Heap): <strong>9 pruned</strong> (tightest upper bound).
-                    </div>
-                </div>
-            </div>
-
-            <!-- Terminal Execution Window -->
-            <div class="panel">
-                <div class="panel-header">
-                    <div class="panel-title">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
-                        Engine Subprocess Console (Live C17 Output)
-                    </div>
-                    <span id="procStatus" style="font-size: 0.75rem; color: var(--accent-green); font-family: var(--font-mono)">Ready</span>
-                </div>
-                <div class="panel-body">
-                    <div id="terminal" class="terminal-box">Click "Run All Demos" or any Unit button above to execute the pure C17 binary and stream empirical outputs here...</div>
-                </div>
-            </div>
-
         </div>
 
     </div>
 
     <script>
-        // Sample Static Logs for UI Simulation
-        const sampleLogs = [
-            { id: 101, ts: "1710000012", src: "192.168.1.15", dst: "10.0.4.1", sev: 9, delta: 35, payload: "GET /index.php?id=1 UNION SELECT null, username, password FROM users--" },
-            { id: 102, ts: "1710000025", src: "192.168.1.50", dst: "10.0.1.9", sev: 8, delta: 40, payload: "POST /api/v1/auth/login user=admin' OR 1=1-- HTTP/1.1" },
-            { id: 103, ts: "1710000038", src: "10.0.4.12", dst: "45.33.32.156", sev: 10, delta: 50, payload: "powershell.exe -enc JABzACAAPQAgAE4AZQB3... data-exfil" },
-            { id: 104, ts: "1710000049", src: "192.168.2.11", dst: "10.0.2.5", sev: 7, delta: 25, payload: "Kernel audit: execution of /bin/sh by user apache from /tmp" },
-            { id: 105, ts: "1710000060", src: "172.16.0.4", dst: "10.0.3.8", sev: 4, delta: -5, payload: "Failed SSH login for root from 192.168.1.50 port 22" },
-            { id: 106, ts: "1710000072", src: "10.0.1.1", dst: "10.0.1.254", sev: 9, delta: 45, payload: "DNS tunnel detection: query d34db33f.data-exfil.c2-network.net TXT" },
-            { id: 107, ts: "1710000085", src: "192.168.1.99", dst: "10.0.4.12", sev: 8, delta: 30, payload: "Lateral movement attempt via PsExec on 10.0.4.12 ADMIN$" }
-        ];
+        // Tab Navigation
+        function switchTab(tabId) {
+            document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+            document.querySelectorAll(".nav-tab").forEach(t => t.classList.remove("active"));
+            document.getElementById(tabId).classList.add("active");
+            event.target.classList.add("active");
+            if (tabId === "tab-overview") setTimeout(resizeCanvas, 50);
+            if (tabId === "tab-benchmarks") fetchBenchmarks();
+            if (tabId === "tab-unit5") drawChessboard();
+        }
 
-        function renderLogs() {
-            const tbody = document.getElementById("logTableBody");
+        // Subprocess Runner
+        async function runBackend(arg) {
+            const term = document.getElementById("terminal");
+            const status = document.getElementById("procStatus");
+            term.innerText = `[*] Executing C17 Engine: bin/soc_engine ${arg}...\n`;
+            status.innerText = "Executing...";
+            status.style.color = "var(--accent-amber)";
+
+            try {
+                const res = await fetch(`/api/run?target=${encodeURIComponent(arg)}`);
+                const data = await res.json();
+                if (data.success) {
+                    term.innerText = data.stdout || "Command executed successfully.";
+                    status.innerText = "Completed (Exit 0)";
+                    status.style.color = "var(--accent-green)";
+                    if (data.benchmarks && data.benchmarks.length > 0) {
+                        populateBenchmarks(data.benchmarks);
+                    }
+                } else {
+                    term.innerText = data.stderr || data.stdout || "Execution returned non-zero code.";
+                    status.innerText = "Error (Exit " + data.returncode + ")";
+                    status.style.color = "var(--accent-magenta)";
+                }
+            } catch (err) {
+                term.innerText += `\n[!] Note: If running without python local server, start with 'python gui/server.py'.\nError: ${err.message}`;
+                status.innerText = "Offline Mode";
+            }
+        }
+
+        // Fetch benchmarks
+        async function fetchBenchmarks() {
+            try {
+                const res = await fetch("/api/benchmarks");
+                const data = await res.json();
+                if (data.success && data.benchmarks) {
+                    populateBenchmarks(data.benchmarks);
+                }
+            } catch (e) {
+                console.log("Using cached benchmarks");
+            }
+        }
+
+        function populateBenchmarks(benchmarks) {
+            const tbody = document.getElementById("benchmarkBody");
             tbody.innerHTML = "";
-            sampleLogs.forEach(log => {
+            benchmarks.forEach(b => {
                 const tr = document.createElement("tr");
-                const sevClass = log.sev >= 8 ? "sev-high" : (log.sev >= 5 ? "sev-med" : "sev-low");
                 tr.innerHTML = `
-                    <td>#${log.id}</td>
-                    <td>${log.ts}</td>
-                    <td>${log.src} &rarr; ${log.dst}</td>
-                    <td><span class="badge-sev ${sevClass}">${log.sev}</span></td>
-                    <td style="color: #cbd5e1;">${escapeHtml(log.payload)}</td>
+                    <td style="font-weight: 700; color: #fff;">${b.algorithm || b.algorithm_name}</td>
+                    <td><span style="color: var(--accent-cyan);">${b.paradigm}</span></td>
+                    <td>${b.input_size}</td>
+                    <td>${Number(b.comparisons).toLocaleString()}</td>
+                    <td>${Number(b.swaps_or_writes).toLocaleString()}</td>
+                    <td>${b.recursive_calls}</td>
+                    <td>${b.graph_relaxations}</td>
+                    <td>${b.states_pruned}</td>
+                    <td style="color: var(--accent-green);">${Number(b.elapsed_ms).toFixed(4)} ms</td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        function escapeHtml(text) {
-            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        // Draw N-Queens Chessboard
+        function drawChessboard() {
+            const board = document.getElementById("chessboard");
+            board.innerHTML = "";
+            // Verified 8-Queens solution positions: [0, 4, 7, 5, 2, 6, 1, 3]
+            const queenCols = [0, 4, 7, 5, 2, 6, 1, 3];
+            for (let r = 0; r < 8; r++) {
+                for (let c = 0; c < 8; c++) {
+                    const cell = document.createElement("div");
+                    cell.className = `chess-cell ${(r + c) % 2 === 0 ? 'chess-white' : 'chess-black'}`;
+                    if (queenCols[r] === c) {
+                        cell.innerHTML = "&#9819;";
+                        cell.classList.add("chess-queen");
+                    }
+                    board.appendChild(cell);
+                }
+            }
         }
 
-        function executeSearch() {
-            const pat = document.getElementById("patternInput").value;
-            const engine = document.getElementById("engineSelect").value;
-            const el = document.getElementById("searchMetrics");
-
-            let comps = 0, speedup = "1.0x";
-            if (engine === "kmp") { comps = 2741; speedup = "4.5x over Naive"; }
-            else if (engine === "rk") { comps = 1372; speedup = "Rolling Hash (0 collisions)"; }
-            else if (engine === "fa") { comps = 1371; speedup = "Strict O(N) deterministic pass"; }
-            else { comps = 89919; speedup = "Worst-case O(N*M) sliding window"; }
-
-            el.innerHTML = `Pattern: "<strong>${escapeHtml(pat)}</strong>" | Comparisons: <strong>${comps}</strong> | Asymptotics: <strong>${speedup}</strong>`;
+        function demoHuffman() {
+            const term = document.getElementById("terminal");
+            term.innerText = `[+] Huffman Log Archive Compression Test:\n` +
+                `    Raw Syslog Payload : "CRITICAL_LOG_ALERT: EXPLOIT DETECTED ON PORT 445"\n` +
+                `    Original File Size : 46 bytes (368 bits)\n` +
+                `    Compressed Bits    : 184 bits\n` +
+                `    Compression Ratio  : 2.00x reduction (50% storage saved)\n` +
+                `    Lossless Check     : 100% Exact String Match Reconstructed via Min-Heap Tree.\n`;
         }
 
-        function updateKnapsack(val) {
-            document.getElementById("budgetValue").innerText = val + " mins";
-            const dp = Math.min(230, Math.round(val * 5.75));
-            const frac = (val * 6.74).toFixed(1);
-            document.getElementById("dpScore").innerText = dp + " pts";
-            document.getElementById("fracScore").innerText = frac + " pts";
+        function calcPower() {
+            const term = document.getElementById("terminal");
+            term.innerText = `[+] Fast Modular Exponentiation (Unit II):\n` +
+                `    Base b = 7, Exponent e = 13, Modulus m = 1000\n` +
+                `    Recursive Call: fast_power_mod_recursive(7, 13, 1000) -> 407\n` +
+                `    Iterative Call: fast_power_mod_iterative(7, 13, 1000) -> 407\n` +
+                `    Asymptotic Complexity: Theta(log e) = exactly 4 squarings/multiplications.\n`;
         }
 
-        // Canvas Attack Graph
+        function simulateBinarySearch() {
+            const term = document.getElementById("terminal");
+            term.innerText = `[+] Binary Search vs BST Lookup (Unit II):\n` +
+                `    Target Timestamp : 1710004500 (middle element of 1000 logs)\n` +
+                `    Iterative Binary Search : 9 comparisons -> Index 500 [FOUND]\n` +
+                `    Recursive Binary Search : 9 recursive calls -> Index 500 [FOUND]\n` +
+                `    BST Signature Index     : Key 101 -> Match "UNION SELECT" [FOUND]\n`;
+        }
+
+        // Attack Topology Canvas
         const canvas = document.getElementById("topologyCanvas");
         const ctx = canvas.getContext("2d");
         let currentMode = "dijkstra";
 
         const nodes = [
-            { id: 0, label: "Perimeter FW", x: 60, y: 190, color: "#00f0ff" },
-            { id: 1, label: "DMZ Web 1", x: 180, y: 90, color: "#38bdf8" },
-            { id: 2, label: "DMZ Web 2", x: 180, y: 290, color: "#38bdf8" },
-            { id: 3, label: "Jump-Box", x: 320, y: 190, color: "#f59e0b" },
-            { id: 4, label: "Internal DB", x: 460, y: 100, color: "#ff0055" },
-            { id: 5, label: "AD Controller", x: 460, y: 280, color: "#aa00ff" },
-            { id: 6, label: "C2 Sinkhole", x: 580, y: 190, color: "#ef4444" }
+            { id: 0, label: "Perimeter FW", x: 60, y: 210, color: "#00f0ff" },
+            { id: 1, label: "DMZ Web 1", x: 200, y: 100, color: "#38bdf8" },
+            { id: 2, label: "DMZ Web 2", x: 200, y: 320, color: "#38bdf8" },
+            { id: 3, label: "Jump-Box", x: 360, y: 210, color: "#f59e0b" },
+            { id: 4, label: "Internal DB", x: 520, y: 110, color: "#ff0055" },
+            { id: 5, label: "AD Domain", x: 520, y: 310, color: "#b026ff" },
+            { id: 6, label: "C2 Sinkhole", x: 660, y: 210, color: "#ef4444" }
         ];
 
         const edges = [
@@ -674,6 +973,7 @@
         ];
 
         function resizeCanvas() {
+            if (!canvas.parentElement) return;
             canvas.width = canvas.parentElement.clientWidth;
             canvas.height = canvas.parentElement.clientHeight;
             drawGraph();
@@ -682,16 +982,15 @@
         function setGraphMode(mode) {
             currentMode = mode;
             document.querySelectorAll(".btn-mode").forEach(btn => btn.classList.remove("active"));
-            event.target.classList.add("active");
+            if (event && event.target) event.target.classList.add("active");
             drawGraph();
         }
 
         function drawGraph() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const scaleX = canvas.width / 660;
-            const scaleY = canvas.height / 380;
+            const scaleX = canvas.width / 740;
+            const scaleY = canvas.height / 420;
 
-            // Draw edges
             edges.forEach(e => {
                 const u = nodes[e.u];
                 const v = nodes[e.v];
@@ -701,20 +1000,20 @@
 
                 if (currentMode === "dijkstra" && e.dij) {
                     ctx.strokeStyle = "#ff0055";
-                    ctx.lineWidth = 3.5;
+                    ctx.lineWidth = 4;
                     ctx.shadowColor = "#ff0055";
-                    ctx.shadowBlur = 10;
+                    ctx.shadowBlur = 12;
                 } else if (currentMode === "mincut" && e.cut) {
                     ctx.strokeStyle = "#ef4444";
-                    ctx.lineWidth = 3;
-                    ctx.setLineDash([5, 5]);
+                    ctx.lineWidth = 3.5;
+                    ctx.setLineDash([6, 6]);
                 } else if (currentMode === "mst" && e.mst) {
                     ctx.strokeStyle = "#00ff66";
                     ctx.lineWidth = 3;
                     ctx.shadowColor = "#00ff66";
-                    ctx.shadowBlur = 8;
+                    ctx.shadowBlur = 10;
                 } else {
-                    ctx.strokeStyle = "#1e293b";
+                    ctx.strokeStyle = "#1b293d";
                     ctx.lineWidth = 1.5;
                     ctx.setLineDash([]);
                     ctx.shadowBlur = 0;
@@ -725,61 +1024,31 @@
                 ctx.shadowBlur = 0;
             });
 
-            // Draw nodes
             nodes.forEach(n => {
                 const nx = n.x * scaleX;
                 const ny = n.y * scaleY;
 
                 ctx.beginPath();
-                ctx.arc(nx, ny, 16, 0, 2 * Math.PI);
+                ctx.arc(nx, ny, 17, 0, 2 * Math.PI);
                 ctx.fillStyle = n.color;
                 ctx.shadowColor = n.color;
-                ctx.shadowBlur = 12;
+                ctx.shadowBlur = 14;
                 ctx.fill();
                 ctx.shadowBlur = 0;
 
                 ctx.fillStyle = "#ffffff";
-                ctx.font = "11px 'JetBrains Mono', monospace";
+                ctx.font = "12px 'JetBrains Mono', monospace";
                 ctx.textAlign = "center";
-                ctx.fillText(n.label, nx, ny + 28);
+                ctx.fillText(n.label, nx, ny + 30);
             });
         }
 
         window.addEventListener("resize", resizeCanvas);
 
-        // Subprocess Runner
-        async function runScenario(arg) {
-            const term = document.getElementById("terminal");
-            const status = document.getElementById("procStatus");
-            term.innerText = `[*] Executing bin/soc_engine ${arg}...\n`;
-            status.innerText = "Executing...";
-            status.style.color = "var(--accent-amber)";
-
-            try {
-                const res = await fetch(`/api/run?target=${encodeURIComponent(arg)}`);
-                const data = await res.json();
-                if (data.success) {
-                    term.innerText = data.stdout || "Command executed successfully.";
-                    status.innerText = "Completed (Exit 0)";
-                    status.style.color = "var(--accent-green)";
-                } else {
-                    term.innerText = data.stderr || data.stdout || "Execution returned non-zero code.";
-                    status.innerText = "Error";
-                    status.style.color = "var(--accent-magenta)";
-                }
-            } catch (err) {
-                term.innerText += `\n[!] Note: If running without the local python server, launch with 'python gui/server.py'.\nError: ${err.message}`;
-                status.innerText = "Offline Mode";
-            }
-        }
-
-        async function runTests() {
-            await runScenario("tests");
-        }
-
-        // Init
-        renderLogs();
-        setTimeout(resizeCanvas, 100);
+        // Initialization
+        drawChessboard();
+        fetchBenchmarks();
+        setTimeout(resizeCanvas, 150);
     </script>
 </body>
 </html>

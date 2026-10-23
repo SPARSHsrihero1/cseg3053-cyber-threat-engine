@@ -50,7 +50,7 @@ class SOCHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_json_response({"success": False, "benchmarks": []})
         elif path == "/api/run":
             arg = query.get("target", ["--run-all-demos"])[0]
-            valid_args = ["--run-all-demos", "--unit2", "--unit3", "--unit4", "--unit5", "--unit6", "tests"]
+            valid_args = ["--run-all-demos", "--scenario1", "--scenario2", "--scenario3", "--unit2", "--unit3", "--unit4", "--unit5", "--unit6", "tests"]
 
             if arg == "tests":
                 cmd = [BIN_TESTS]

@@ -519,6 +519,18 @@ int main(int argc, char *argv[]) {
             run_scenario_3_adversarial_stress();
             export_all_metrics();
             return 0;
+        } else if (strcmp(argv[1], "--scenario1") == 0) {
+            run_scenario_1_normal_soc();
+            export_all_metrics();
+            return 0;
+        } else if (strcmp(argv[1], "--scenario2") == 0) {
+            run_scenario_2_ransomware_shock();
+            export_all_metrics();
+            return 0;
+        } else if (strcmp(argv[1], "--scenario3") == 0) {
+            run_scenario_3_adversarial_stress();
+            export_all_metrics();
+            return 0;
         } else if (strcmp(argv[1], "--unit2") == 0) {
             run_unit2_lab();
             return 0;
@@ -535,7 +547,7 @@ int main(int argc, char *argv[]) {
             run_unit6_lab();
             return 0;
         } else {
-            printf("Usage: %s [--run-all-demos | --unit2 | --unit3 | --unit4 | --unit5 | --unit6]\n", argv[0]);
+            printf("Usage: %s [--run-all-demos | --scenario1 | --scenario2 | --scenario3 | --unit2 | --unit3 | --unit4 | --unit5 | --unit6]\n", argv[0]);
             return 1;
         }
     }
