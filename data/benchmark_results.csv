@@ -1,0 +1,37 @@
+Algorithm,Paradigm,InputSize,Comparisons,SwapsOrWrites,RecursiveCalls,GraphRelaxations,StatesPruned,BytesAllocated,ElapsedMs
+"Merge Sort (Logs)","Divide & Conquer",1000,5044,19953,999,0,0,320000,0.0000
+"Quick Sort (Rand Pivot)","Divide & Conquer",1000,11330,12704,664,0,0,0,0.0000
+"Binary Search (Iterative)","Divide & Conquer",1000,9,0,0,0,0,0,0.0000
+"Binary Search (Recursive)","Divide & Conquer",1000,9,0,9,0,0,0,0.0000
+"Naive String Match","String Matching",1371,1371,1,0,0,0,0,0.0000
+"Rabin-Karp Rolling Hash","String Matching",1371,1372,1360,0,0,0,0,0.0000
+"Finite Automaton Match","String Matching",1371,1371,4699,0,0,0,0,0.0000
+"KMP Matcher","String Matching",1371,2741,13,0,0,0,48,0.0000
+"LCS Kill-Chain Match","Dynamic Programming",30,297,297,0,0,0,0,0.0000
+"OBST Signature Index","Dynamic Programming",8,120,59,0,0,0,0,0.0000
+"Bipartite Incident Match","Graph / Flow",12,42,20,46,0,0,0,0.0000
+"Fractional Knapsack (DPI)","Greedy",12,70,116,0,0,0,0,0.0000
+"0/1 Knapsack Playbooks","Dynamic Programming",12,697,509,0,0,0,2236,0.0000
+"0/1 Knapsack Backtrack","Backtracking",12,180,104,47,0,35,0,0.0000
+"0/1 Knapsack BB (FIFO)","Branch & Bound",12,170,57,0,0,11,18350080,0.0000
+"0/1 Knapsack BB (LIFO)","Branch & Bound",12,172,57,0,0,11,18350080,0.0000
+"0/1 Knapsack BB (LC/PQ)","Branch & Bound",12,159,57,0,0,9,18350080,0.0000
+"Dijkstra Attack Path","Greedy",10,34,10,0,10,0,0,0.0000
+"Bellman-Ford Escalation","Dynamic Programming",10,306,10,0,10,0,0,0.0000
+"Prim Quarantine MST","Greedy",8,54,19,0,12,0,0,0.0000
+"Kruskal Quarantine MST","Greedy",8,240,213,0,0,0,0,0.0000
+"Ford-Fulkerson Max Flow","Network Flow",10,155,62,0,31,0,0,0.0000
+"","Divide & Conquer",100,356,1345,99,0,0,32000,0.0000
+"+","Divide & Conquer",100,620,916,67,0,0,0,0.0000
+"","Divide & Conquer",2500,14752,56809,2499,0,0,800000,1.0000
+"+","Divide & Conquer",2500,32668,37774,1664,0,0,0,0.0000
+"","Divide & Conquer",10000,69008,267233,9999,0,0,3200000,6.0000
+"+","Divide & Conquer",10000,153002,176850,6657,0,0,0,2.0000
+"QuickSort Det (Sorted)","Adversarial O(N^2)",2000,1999000,4001998,1999,0,0,0,32.0000
+"MergeSort (Sorted)","Stable O(N log N)",2000,11088,43905,1999,0,0,640000,0.0000
+"Naive Match (Adversarial)","String Matching",10000,89919,1,0,0,0,0,0.0000
+"KMP Match (Adversarial)","String Matching",10000,20004,10,0,0,0,36,0.0000
+"Classical Matrix 16x16","Classical O(N^3)",16,0,4096,0,0,0,0,0.0000
+"Strassen Matrix 16x16","Divide & Conquer",16,0,4232,57,0,0,0,1.0000
+"TSP Held-Karp DP (N=12)","Dynamic Programming",12,56342,41618,0,0,0,458752,1.0000
+"TSP LC-BB (N=12)","Branch & Bound",12,795090,1,0,0,22474,18087936,16.0000
