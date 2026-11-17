@@ -58,14 +58,30 @@ cseg3053-cyber-threat-engine/
 ├── CMakeLists.txt                         # CMake 3.16+ configuration
 ├── build.bat                              # Windows batch build script
 ├── build.ps1                              # Windows PowerShell build script
+├── start_gui.bat                          # Quick-start GUI launcher (Batch)
+├── start_gui.ps1                          # Quick-start GUI launcher (PowerShell)
 ├── README.md                              # Main project documentation
 ├── docs/
+│   ├── Final_Project_Report_CSEG3053.md   # Complete Academic Project Report (Markdown)
+│   ├── Final_Project_Report_CSEG3053.docx # Styled Microsoft Word Capstone Report
 │   ├── Week1_Requirements_and_Architecture.md
+│   ├── Week2_Algorithmic_Foundations_and_Empirical_Analysis.md
+│   ├── Week3_Greedy_Method_and_Network_Optimization.md
+│   ├── Week4_Dynamic_Programming_and_State_Optimization.md
+│   ├── Week5_Backtracking_and_Branch_and_Bound.md
+│   ├── Week6_Network_Flow_String_Matching_and_Complexity.md
+│   ├── Week7_Final_Integration_and_Defense_Dossier.md
 │   ├── Recurrence_Relations_and_Master_Theorem.md
 │   └── Complexity_Classes_and_NP_Reductions.md
+├── presentation/
+│   ├── CSEG3053_Cyber_Threat_Engine_Presentation.pptx # 18-Slide Widescreen PPTX Deck
+│   └── slides.md                          # Markdown presentation notes
 ├── data/
 │   ├── benchmark_results.csv              # Empirical exported metrics table
 │   └── benchmark_results.json             # Structured JSON benchmark results
+├── gui/
+│   ├── index.html                         # Interactive Algorithmic Studio UI
+│   └── server.py                          # Zero-dependency Python server
 ├── include/
 │   ├── domain.h                           # Core SOC structs (EventLog, AttackGraph, etc.)
 │   ├── metrics.h                          # MetricsTracker & telemetry hooks
