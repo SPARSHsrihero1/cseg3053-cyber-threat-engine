@@ -13,6 +13,17 @@ The engine parses event logs, models enterprise network infrastructure through w
 
 ---
 
+### Project Deliverables & Academic Artifacts
+
+* **Academic Project Report (Word):** [`docs/Final_Project_Report_CSEG3053.docx`](docs/Final_Project_Report_CSEG3053.docx) — Fully styled academic paper formatted to the CSEG3053 rubric.
+* **Academic Project Report (Markdown):** [`docs/Final_Project_Report_CSEG3053.md`](docs/Final_Project_Report_CSEG3053.md) — Comprehensive ~10,000-word technical report with proofs, empirical tables, and reduction mappings.
+* **Viva Defense Presentation (PowerPoint):** [`presentation/CSEG3053_Cyber_Threat_Engine_Presentation.pptx`](presentation/CSEG3053_Cyber_Threat_Engine_Presentation.pptx) — 18-slide widescreen (16:9) presentation in a modern cybersecurity dark theme.
+* **Presentation Slide Notes (Markdown):** [`presentation/slides.md`](presentation/slides.md) — Slide-by-slide speaker notes.
+* **Interactive SOC Studio:** Run `.\start_gui.bat` to launch the local web studio at `http://127.0.0.1:8080`.
+* **Latest Release:** [Release v1.1.0](https://github.com/SPARSHsrihero1/cseg3053-cyber-threat-engine/releases/tag/v1.1.0) on GitHub.
+
+---
+
 ## 1. Syllabus-to-Domain Mapping
 
 | Syllabus Unit | Assessable Algorithm | Domain Function in SOC Engine | Implementation File |
