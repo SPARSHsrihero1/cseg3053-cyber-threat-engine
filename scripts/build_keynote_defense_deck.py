@@ -16,6 +16,7 @@ from pptx.enum.shapes import MSO_SHAPE
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ASSETS_DIR = os.path.join(BASE_DIR, "presentation", "assets")
+COMPOSITES_DIR = os.path.join(ASSETS_DIR, "composites")
 PRES_DIR = os.path.join(BASE_DIR, "presentation")
 os.makedirs(PRES_DIR, exist_ok=True)
 
@@ -47,7 +48,7 @@ SLIDES_DATA = [
         "kpi2_color": GREEN,
         "takeaway": "A deterministic cybersecurity engine synthesizing Divide & Conquer, String Automata, Dynamic Graphs, and Branch & Bound into a unified threat detection kernel.",
         "pills": ["[ PURE C17 KERNEL ]", "[ ZERO HEAP MALLOC ]", "[ < 200MS MITIGATION ]"],
-        "diagram": "slide1_system_architecture.png"
+        "diagram": os.path.join(COMPOSITES_DIR, "slide1_composite.png")
     },
     {
         "phase": "PHASE 02 / 08",
@@ -62,7 +63,7 @@ SLIDES_DATA = [
         "kpi2_color": CYAN,
         "takeaway": "A four-stage deterministic dataflow pipeline transforms unbounded syslog streams into directed attack graphs and triggers capacity-bounded quarantine in sub-millisecond time.",
         "pills": ["[ LOCK-FREE BUFFER ]", "[ MONOTONIC PIPELINE ]", "[ PIPELINE ISOLATION ]"],
-        "diagram": "slide2_pipeline_stages.png"
+        "diagram": os.path.join(ASSETS_DIR, "slide2_pipeline_stages.png")
     },
     {
         "phase": "PHASE 03 / 08",
@@ -77,7 +78,7 @@ SLIDES_DATA = [
         "kpi2_color": CYAN,
         "takeaway": "Stable MergeSort provably maintains strict Θ(n log n) throughput, neutralizing attacker-crafted presorted log streams that degrade naive QuickSort to catastrophic Θ(n²) collapse.",
         "pills": ["[ MASTER THEOREM C2 ]", "[ STABLE ORDERING ]", "[ DOS MITIGATION ]"],
-        "diagram": "slide3_recurrence_trees.png"
+        "diagram": os.path.join(COMPOSITES_DIR, "slide3_composite.png")
     },
     {
         "phase": "PHASE 04 / 08",
@@ -92,7 +93,7 @@ SLIDES_DATA = [
         "kpi2_color": CYAN,
         "takeaway": "KMP precomputes the π[q] failure table to advance text pointers monotonically, preventing CPU exhaustion attacks caused by naive sliding-window backtracking.",
         "pills": ["[ MONOTONIC POINTER ]", "[ ZERO BACKTRACK ]", "[ ROLLING HASH VERIFIED ]"],
-        "diagram": "slide4_string_automaton.png"
+        "diagram": os.path.join(COMPOSITES_DIR, "slide4_composite.png")
     },
     {
         "phase": "PHASE 05 / 08",
@@ -107,7 +108,7 @@ SLIDES_DATA = [
         "kpi2_color": RED,
         "takeaway": "Dijkstra traces critical attack vectors in O((V+E) log V), Bellman-Ford flags negative-cost privilege cycles, and Edmonds-Karp isolates breached subnets with minimal bandwidth disruption.",
         "pills": ["[ BINARY MIN-HEAP ]", "[ BELLMAN-FORD O(VE) ]", "[ MAX-FLOW / MIN-CUT ]"],
-        "diagram": "slide5_attack_topology.png"
+        "diagram": os.path.join(COMPOSITES_DIR, "slide5_composite.png")
     },
     {
         "phase": "PHASE 06 / 08",
@@ -122,7 +123,7 @@ SLIDES_DATA = [
         "kpi2_color": CYAN,
         "takeaway": "Branch-and-Bound leverages greedy fractional upper bounds to discard unpromising remediation subtrees, yielding optimal threat suppression within strict CPU and memory budgets.",
         "pills": ["[ FRACTIONAL BOUND ]", "[ LCBB BEST-FIRST ]", "[ ZERO BUDGET OVERRUN ]"],
-        "diagram": "slide6_state_space_tree.png"
+        "diagram": os.path.join(COMPOSITES_DIR, "slide6_composite.png")
     },
     {
         "phase": "PHASE 07 / 08",
@@ -137,7 +138,7 @@ SLIDES_DATA = [
         "kpi2_color": GREEN,
         "takeaway": "We prove Decision 0/1 Knapsack is NP-Complete by exhibiting an O(n) polynomial-time reduction from SUBSET-SUM, justifying Branch-and-Bound pruning for real-time operation.",
         "pills": ["[ SUBSET-SUM <=p KNAPSACK ]", "[ POLYNOMIAL VERIFIER ]", "[ NP-COMPLETE ]"],
-        "diagram": "slide7_complexity_reduction.png"
+        "diagram": os.path.join(ASSETS_DIR, "slide7_complexity_reduction.png")
     },
     {
         "phase": "PHASE 08 / 08",
@@ -152,7 +153,7 @@ SLIDES_DATA = [
         "kpi2_color": CYAN,
         "takeaway": "Empirical benchmarks validate all theoretical asymptotic claims. Pure C17 implementation guarantees production reliability, memory safety, and sub-millisecond response.",
         "pills": ["[ VALGRIND VERIFIED ]", "[ CSV/JSON METRICS ]", "[ 1.2M OPS / SEC ]"],
-        "diagram": "slide8_empirical_dashboard.png"
+        "diagram": os.path.join(COMPOSITES_DIR, "slide8_composite.png")
     }
 ]
 
@@ -322,7 +323,7 @@ def build_presentation():
         right_container.line.width = Pt(1.5)
 
         # Embed Diagram Image inside right container
-        img_path = os.path.join(ASSETS_DIR, data["diagram"])
+        img_path = data["diagram"] if os.path.isabs(data["diagram"]) else os.path.join(ASSETS_DIR, data["diagram"])
         if os.path.exists(img_path):
             slide.shapes.add_picture(img_path, Inches(5.08), Inches(1.66), width=Inches(7.37), height=Inches(5.26))
 

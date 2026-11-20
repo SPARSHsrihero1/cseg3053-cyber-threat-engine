@@ -103,7 +103,7 @@ def render_previews():
         ax.add_patch(right_card)
 
         # Diagram Image
-        img_path = os.path.join(ASSETS_DIR, d["diagram"])
+        img_path = d["diagram"] if os.path.isabs(d["diagram"]) else os.path.join(ASSETS_DIR, d["diagram"])
         if os.path.exists(img_path):
             img = Image.open(img_path)
             ax.imshow(img, extent=[5.08, 12.45, 0.58, 5.84], zorder=3)
